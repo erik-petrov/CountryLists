@@ -6,6 +6,8 @@ using System.Linq;
 using Xamarin.Forms;
 using Xamarin.Essentials;
 using static CountryLists.Page;
+using Rg.Plugins.Popup.Extensions;
+using Rg.Plugins.Popup.Services;
 
 namespace CountryLists
 {
@@ -78,11 +80,16 @@ namespace CountryLists
             {
                 Text = "Kustuta riik",
             };
-            add.Clicked += (e, v) => {
+            add.Clicked += async (e, v) => {
                 List<Country> countryd = Prefs.SavedList;
-                countryd.Add(new Country { Nimi = "Riik", Capital = "Capital", People = "0", Picture = "link" });
-                //Rg.Plugins.Popup.Contracts.IPopupNavigation.Push
-                SaveCountries(countryd);
+                //countryd.Add(new Country { Nimi = "Riik", Capital = "Capital", People = "0", Picture = "link" });
+                MyPopupPage popup = new MyPopupPage();
+                await PopupNavigation.Instance.PushAsync(popup);
+                if (await popup.PopupClosedTask != null)
+                {
+                    countryd.Add(popup.PopupClosedTask.Result);
+                    SaveCountries(countryd);
+                }
             };
             remove.Clicked += async (e, v) =>
             {

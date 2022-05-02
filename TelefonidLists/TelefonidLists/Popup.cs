@@ -1,53 +1,74 @@
-﻿using System;
+﻿using Rg.Plugins.Popup.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using static CountryLists.Page;
 
 namespace CountryLists
 {
     public partial class MyPopupPage : Rg.Plugins.Popup.Pages.PopupPage
     {
+        private TaskCompletionSource<Country> taskCompletionSource;
+        public Task<Country> PopupClosedTask { get { return taskCompletionSource.Task; } }
         public MyPopupPage()
         {
+            this.BackgroundColor = Color.Black;
             Entry name = new Entry
             {
-                Text = "Nimi",
+                Placeholder = "Nimi",
                 Keyboard = Keyboard.Default
             };
-            Entry tootja = new Entry
+            Entry capital = new Entry
             {
-                Text = "Tootja",
+                Placeholder = "Capital",
                 Keyboard = Keyboard.Default
             };
-            Entry hind = new Entry
+            Entry people = new Entry
             {
-                Text = "Hind",
+                Placeholder = "People",
                 Keyboard = Keyboard.Numeric
             };
             Entry url = new Entry
             {
-                Text = "Url",
+                Placeholder = "Url",
                 Keyboard = Keyboard.Default
             };
-            Content = new StackLayout { Children = { name, tootja, hind, url } };
+            Button accept = new Button
+            {
+                Text = "Accept",
+            };
+            accept.Clicked += (s, e) =>
+            {
+                taskCompletionSource.SetResult(new Country { Nimi = name.Text, Capital = capital.Text, People = people.Text, Picture = url.Text});
+                Navigation.RemovePopupPageAsync(this);
+            };
+            Button cancel = new Button
+            {
+                Text = "Cancel",
+            };
+            cancel.Clicked += (s, e) =>
+            {
+                Navigation.RemovePopupPageAsync(this);
+            };
+            Content = new StackLayout { Children = { name, capital, people, url, accept, cancel} };
         }
 
-        protected override void OnAppearing()
-        {
-            base.OnAppearing();
-        }
+        protected override void OnAppearing() { base.OnAppearing(); taskCompletionSource = new TaskCompletionSource<Country>(); }
 
         protected override void OnDisappearing()
         {
+
             base.OnDisappearing();
+
         }
 
-        // ### Methods for supporting animations in your popup page ###
+    // ### Methods for supporting animations in your popup page ###
 
-        // Invoked before an animation appearing
-        protected override void OnAppearingAnimationBegin()
+    // Invoked before an animation appearing
+    protected override void OnAppearingAnimationBegin()
         {
             base.OnAppearingAnimationBegin();
         }
