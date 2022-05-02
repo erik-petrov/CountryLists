@@ -19,6 +19,18 @@ namespace CountryLists
             public string Capital { get; set; }
             public string People { get; set; }
             public string Picture { get; set; }
+            public override bool Equals(object obj)
+            {
+                if (obj == null) return false;
+                Country objAsPart = obj as Country;
+                if (objAsPart == null) return false;
+                else return Equals(objAsPart);
+            }
+            public bool Equals(Country other)
+            {
+                if (other == null) return false;
+                return (this.Nimi.Equals(other.Nimi));
+            }
         }
         Label lbl;
         ListView lv;
@@ -87,8 +99,13 @@ namespace CountryLists
                 await PopupNavigation.Instance.PushAsync(popup);
                 if (await popup.PopupClosedTask != null)
                 {
-                    countryd.Add(popup.PopupClosedTask.Result);
-                    SaveCountries(countryd);
+                    if (!countryd.Exists(x => x.Nimi == popup.PopupClosedTask.Result.Nimi))
+                    {
+                        countryd.Add(popup.PopupClosedTask.Result);
+                        SaveCountries(countryd);
+                    }
+                    else
+                        await DisplayAlert("Duplicate", "Country already exists", "Ok");
                 }
             };
             remove.Clicked += async (e, v) =>
