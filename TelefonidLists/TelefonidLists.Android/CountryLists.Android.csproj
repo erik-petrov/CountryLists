@@ -94,9 +94,9 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TelefonidLists\TelefonidLists.csproj">
-      <Project>{2DEDF81A-3C2E-4C1E-88C3-60BA30B872A1}</Project>
-      <Name>TelefonidLists</Name>
+    <ProjectReference Include="..\TelefonidLists\CountryLists.csproj">
+      <Project>{690DA95F-CBB1-4F47-9127-8568A1B2E15A}</Project>
+      <Name>CountryLists</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
